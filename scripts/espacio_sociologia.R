@@ -113,7 +113,27 @@ espacio_pca$var
 #'son los programas que más contribuyen a la Dim 2. 
 espacio_pca$ind$contrib[,1]
 
+#Graficando variables relevantes 
+ggplot(espacio, aes(x = sol_prim_ing_t, y = egre_t, label = id)) +
+  geom_point() +
+  geom_text_repel(size = 3) +
+  geom_smooth(method = "loess", color = "green") +
+  theme_bw()+
+  ggtitle("Primer ingreso total / Egreso total")
 
+ggplot(espacio, aes(x = sol_prim_ing_m, y = egre_t, label = id)) +
+  geom_point() +
+  geom_text_repel(size = 3) +
+  geom_smooth(method = "loess", color = "red") +
+  theme_bw()+
+  ggtitle("Primer ingreso mujeres / Egreso total")
+
+ggplot(espacio, aes(x = sol_prim_ing_h, y = egre_t, label = id)) +
+  geom_point() +
+  geom_text_repel(size = 3) +
+  geom_smooth(method = "loess", color = "blue") +
+  theme_bw()+
+  ggtitle("Primer ingreso hombres / Egreso total")
 
 #Creando variables sintéticas y sumándolas a la base 
 espacio$comp1 <- espacio_pca$ind$coord[,1] #Primer ingreso 
@@ -136,7 +156,6 @@ p_caption <- "Elaboración propia con datos de Anuarios Estadísticos, ANUIES, 2
 
 etiqueta_x <- "Contribución al componente 1: Ingreso"
 etiqueta_y <- "Contribución al componente 2: Egreso"
-
 
 #Graficando los componentes 1 y 2
 
