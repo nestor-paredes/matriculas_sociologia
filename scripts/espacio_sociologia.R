@@ -22,7 +22,6 @@ library(FactoMineR)
 library(factoextra)
 library(Factoshiny)
 
-install.packages("ggrepel")
 
 ###############################
 #'Estoy utilizando los datos 23-24, 48 programas
@@ -103,18 +102,56 @@ espacio_pca$var
 #'Explorando a los individuos. La UAM Azc y la UAM Xoc, seguidas por la UNAM FCPyS escolarizada
 #'son los programas que mas contribuyen a la Dim1; por su parte, Uhumanista_LA, UABJO_IIS y UDG_CUCSyH
 #'son los programas que más contribuyen a la Dim 2. 
-espacio_pca$ind$contrib
+espacio_pca$ind$contrib[,1]
 
 
 
-#Creando variables sintéticas
+#Creando variables sintéticas y sumándolas a la base 
 espacio$comp1 <- espacio_pca$ind$coord[,1] #Primer ingreso 
 espacio$comp2 <- espacio_pca$ind$coord[,2] #Egresados 
 
-#Graficando variables sintéticas 
+#Graficando variables sintéticas 1
+#No legible 
 plot1 <-ggplot(espacio, aes(x = comp1, y = comp2)) +
   geom_point() +
   theme_bw()+
   ggtitle("Primer ingreso/Egresadxs")+
   geom_text(aes(label = id), hjust = 0)
 plot1
+
+#Graficando variables sintéticas 2
+#Utilizando ggrepel
+
+p_titulo <- "Componente 1/Componente 2"
+p_subtitulo <- "Primer ingreso y Egreso"
+p_caption <- "Elaboración propia con datos de Anuarios Estadísticos, ANUIES, 2023-2024"
+
+etiqueta_x <- "Contribución al componente 1: Ingreso"
+etiqueta_y <- "Contribución al componente 2: Egreso"
+
+grafica <- ggplot(espacio, aes(x = comp1, y = comp2, 
+                               label = id))
+grafica + theme_bw()+
+  geom_point() +
+  geom_text_repel(size = 3) +
+  labs(x = etiqueta_x, 
+       y = etiqueta_y, 
+       title = p_titulo, 
+       subtitle = p_subtitulo, 
+       caption = p_caption
+       ) +
+  theme(
+    plot.title = element_text(size = 15, face = "bold", family = "roboto"),
+    plot.subtitle = element_text(size = 13, family = "roboto"),
+    axis.title.x = element_text (size = 10, face = "bold", family = "roboto"),
+    axis.title.y = element_text (size = 10, face = "bold", family = "roboto")
+        )
+
+
+
+install.packages("showtext")
+
+library(showtext)
+
+
+
