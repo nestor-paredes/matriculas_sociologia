@@ -8,6 +8,7 @@ library(installr)
 library(readr)
 library(dplyr)
 library(tidyverse)
+library(paletteer)
 library(ggthemes)
 library(ggrepel)
 library(GGally)
@@ -21,6 +22,14 @@ library(patchwork)
 library(FactoMineR)
 library(factoextra)
 library(Factoshiny)
+
+#install.packages("showtext")
+#install.packages("sysfonts")
+library(showtext)
+library(sysfonts)
+font_add_google(name = "Roboto", family = "roboto")
+showtext_auto()
+
 
 
 ###############################
@@ -112,12 +121,11 @@ espacio$comp2 <- espacio_pca$ind$coord[,2] #Egresados
 
 #Graficando variables sintéticas 1
 #No legible 
-plot1 <-ggplot(espacio, aes(x = comp1, y = comp2)) +
+ggplot(espacio, aes(x = comp1, y = comp2)) +
   geom_point() +
   theme_bw()+
   ggtitle("Primer ingreso/Egresadxs")+
   geom_text(aes(label = id), hjust = 0)
-plot1
 
 #Graficando variables sintéticas 2
 #Utilizando ggrepel
@@ -129,6 +137,9 @@ p_caption <- "Elaboración propia con datos de Anuarios Estadísticos, ANUIES, 2
 etiqueta_x <- "Contribución al componente 1: Ingreso"
 etiqueta_y <- "Contribución al componente 2: Egreso"
 
+
+#Graficando los componentes 1 y 2
+
 grafica <- ggplot(espacio, aes(x = comp1, y = comp2, 
                                label = id))
 grafica + theme_bw()+
@@ -139,19 +150,62 @@ grafica + theme_bw()+
        title = p_titulo, 
        subtitle = p_subtitulo, 
        caption = p_caption
+  ) +
+  theme(
+    plot.title = element_text(size = 15, face = "bold", family = "roboto"),
+    plot.subtitle = element_text(size = 13, family = "roboto"),
+    axis.title.x = element_text (size = 10, face = "bold", family = "roboto"),
+    axis.title.y = element_text (size = 10, face = "bold", family = "roboto"), 
+    panel.border = element_rect(size = 1.2),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  ) 
+
+#Graficando los componentes 1 y 2 por tipo de financiamiento
+
+grafica <- ggplot(espacio, aes(x = comp1, y = comp2, 
+                               label = id, 
+                               color = financiamiento))
+grafica + theme_bw()+
+  geom_point() +
+  geom_text_repel(size = 3, face ="bold") +
+  scale_colour_paletteer_d("MexBrewer::Alacena") +
+    labs(x = etiqueta_x, 
+       y = etiqueta_y, 
+       title = p_titulo, 
+       subtitle = p_subtitulo, 
+       caption = p_caption
        ) +
   theme(
     plot.title = element_text(size = 15, face = "bold", family = "roboto"),
     plot.subtitle = element_text(size = 13, family = "roboto"),
     axis.title.x = element_text (size = 10, face = "bold", family = "roboto"),
-    axis.title.y = element_text (size = 10, face = "bold", family = "roboto")
+    axis.title.y = element_text (size = 10, face = "bold", family = "roboto"), 
+    panel.border = element_rect(size = 1.2),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
         )
 
+#Graficando los componentes 1 y 2 facet por tipo de financiamiento 
 
-
-install.packages("showtext")
-
-library(showtext)
-
-
-
+grafica <- ggplot(espacio, aes(x = comp1, y = comp2, 
+                               label = id))
+grafica + theme_bw()+
+  geom_point() +
+  geom_text_repel(size = 3) +
+  labs(x = etiqueta_x, 
+       y = etiqueta_y, 
+       title = p_titulo, 
+       subtitle = p_subtitulo, 
+       caption = p_caption
+  ) +
+  theme(
+    plot.title = element_text(size = 15, face = "bold", family = "roboto"),
+    plot.subtitle = element_text(size = 13, family = "roboto"),
+    axis.title.x = element_text (size = 10, face = "bold", family = "roboto"),
+    axis.title.y = element_text (size = 10, face = "bold", family = "roboto"), 
+    panel.border = element_rect(size = 1.2),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  ) + 
+  facet_wrap(~ financiamiento)
