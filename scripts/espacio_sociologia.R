@@ -9,6 +9,7 @@ library(readr)
 library(dplyr)
 library(tidyverse)
 library(ggthemes)
+library(ggrepel)
 library(GGally)
 library(corrplot)
 library(Hmisc)
@@ -20,6 +21,8 @@ library(patchwork)
 library(FactoMineR)
 library(factoextra)
 library(Factoshiny)
+
+install.packages("ggrepel")
 
 ###############################
 #'Estoy utilizando los datos 23-24, 48 programas
@@ -39,8 +42,9 @@ espacio <- base3 %>%
   mutate(across(where(is.double), scale)) #Normalizando o estandarizando las variables numéricas 
   rm(base3)
   espacio
-  View(espacio)
+  View(espacio) 
 
+###############################
 #Buscando correlaciones 
   
 espacio %>% 
@@ -82,3 +86,35 @@ espacio %>%
   select(lug_ofer:tit_t) %>% #Está buena
   cor() %>%
   heatmap()
+
+###############################
+#PCA
+
+#Un PCA, indicando las variables categóricas como complementarias
+espacio_pca <- PCA(espacio,ncp = 4, quali.sup=1:9)
+
+#'Explorando los eigenvalues, los dos primeros capturan el 92% de la inercia/varianza 
+espacio_pca$eig
+
+#'Explorando las variables, en la Dim 1 la que que más contribuye es Primer ingreso hombres, 
+#'seguida de Primer ingreso total. En la Dim 2 Egresados total
+espacio_pca$var
+
+#'Explorando a los individuos. La UAM Azc y la UAM Xoc, seguidas por la UNAM FCPyS escolarizada
+#'son los programas que mas contribuyen a la Dim1; por su parte, Uhumanista_LA, UABJO_IIS y UDG_CUCSyH
+#'son los programas que más contribuyen a la Dim 2. 
+espacio_pca$ind$contrib
+
+
+
+#Creando variables sintéticas
+espacio$comp1 <- espacio_pca$ind$coord[,1] #Primer ingreso 
+espacio$comp2 <- espacio_pca$ind$coord[,2] #Egresados 
+
+#Graficando variables sintéticas 
+plot1 <-ggplot(espacio, aes(x = comp1, y = comp2)) +
+  geom_point() +
+  theme_bw()+
+  ggtitle("Primer ingreso/Egresadxs")+
+  geom_text(aes(label = id), hjust = 0)
+plot1
