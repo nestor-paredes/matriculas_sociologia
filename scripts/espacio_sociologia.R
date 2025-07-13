@@ -48,7 +48,7 @@ espacio %>%
   pairs() 
 
 espacio %>% 
-  select(lug_ofer:tit_t) %>% 
+  select(lug_ofer:tit_t) %>% #Es necesario hacer una matriz de correlación previa 
   cor() %>%
   ggpairs()
 
