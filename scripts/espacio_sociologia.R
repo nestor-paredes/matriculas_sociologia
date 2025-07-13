@@ -48,8 +48,9 @@ espacio %>%
   pairs() 
 
 espacio %>% 
-  select(lug_ofer:tit_t) %>% #Falló en la construcción del gráfico (!?)
-  ggpairs() 
+  select(lug_ofer:tit_t) %>% 
+  cor() %>%
+  ggpairs()
 
 #install.packages("PerformanceAnalytics")
 library(PerformanceAnalytics)
@@ -81,5 +82,7 @@ espacio %>%
   select(lug_ofer:tit_t) %>% #Está buena
   cor() %>%
   heatmap()
+  
 
-?heatmap
+
+
