@@ -82,7 +82,3 @@ espacio %>%
   select(lug_ofer:tit_t) %>% #Está buena
   cor() %>%
   heatmap()
-  
-
-
-
