@@ -150,20 +150,21 @@ ggplot(espacio, aes(x = comp1, y = comp2)) +
 #Graficando variables sintéticas 2
 #Utilizando ggrepel
 
-p_titulo <- "Componente 1/Componente 2"
-p_subtitulo <- "Primer ingreso y Egreso"
+p_titulo <- "Situación de las matrículas de sociología a nivel licenciatura"
+p_subtitulo <- "Índices de acceso y salida de la formación universitaria"
 p_caption <- "Elaboración propia con datos de Anuarios Estadísticos, ANUIES, 2023-2024"
 
-etiqueta_x <- "Contribución al componente 1: Ingreso"
-etiqueta_y <- "Contribución al componente 2: Egreso"
+etiqueta_x <- "Índice de acceso"
+etiqueta_y <- "Índice de salida"
 
 #Graficando los componentes 1 y 2
 
 grafica <- ggplot(espacio, aes(x = comp1, y = comp2, 
                                label = id))
 grafica + theme_bw()+
-  geom_point() +
-  geom_text_repel(size = 3) +
+  geom_point() + 
+  geom_smooth(method = "loess", color = "#00688B") +
+  geom_text_repel(size = 5) +
   labs(x = etiqueta_x, 
        y = etiqueta_y, 
        title = p_titulo, 
@@ -171,7 +172,7 @@ grafica + theme_bw()+
        caption = p_caption
   ) +
   theme(
-    plot.title = element_text(size = 15, face = "bold", family = "roboto"),
+    plot.title = element_text(size = 18, face = "bold", family = "roboto"),
     plot.subtitle = element_text(size = 13, family = "roboto"),
     axis.title.x = element_text (size = 10, face = "bold", family = "roboto"),
     axis.title.y = element_text (size = 10, face = "bold", family = "roboto"), 
